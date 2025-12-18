@@ -63,16 +63,17 @@ body {
     touch-action: manipulation;
 }
 
-/* --- Fons Animats --- */
+/* --- Fons Animats (AJUSTATS) --- */
 .glow-orb {
     position: fixed;
-    width: 60vw;
-    height: 60vw;
+    width: 40vw;
+    height: 40vw;
     border-radius: 50%;
-    filter: blur(80px);
+    filter: blur(60px);
     z-index: -2;
-    opacity: 0.25;
-    animation: orbFloat 15s infinite ease-in-out alternate;
+    opacity: 0.15;
+    animation: orbFloat 20s infinite ease-in-out alternate;
+    pointer-events: none;
 }
 
 @keyframes orbFloat {
@@ -149,7 +150,6 @@ header {
     display: flex;
     flex-direction: column;
     gap: 1.25rem;
-    box-shadow: 0 10px 30px -5px rgba(0,0,0,0.5);
     margin-bottom: 1.25rem;
 }
 
@@ -219,7 +219,6 @@ label {
     height: 24px;
     background: white;
     border-radius: 50%;
-    box-shadow: 0 0 10px var(--primary);
 }
 
 /* --- Botons --- */
@@ -233,7 +232,7 @@ label {
     letter-spacing: 0.05em;
     cursor: pointer;
     border: none;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -247,27 +246,42 @@ label {
 }
 
 .btn.primary {
-    background: white;
-    color: var(--bg-dark);
-    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+    background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+    color: white;
+}
+
+.btn.primary:active {
+    background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
 }
 
 .btn.secondary {
-    background: transparent;
-    border: 1px solid var(--border-color);
-    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--text-main);
+}
+
+.btn.secondary:active {
+    background: rgba(255, 255, 255, 0.12);
 }
 
 .btn.dashed {
-    border: 2px dashed var(--border-color);
-    background: rgba(255,255,255,0.03);
+    border: 2px dashed rgba(56, 189, 248, 0.4);
+    background: rgba(56, 189, 248, 0.05);
     color: var(--primary);
 }
 
+.btn.dashed:active {
+    background: rgba(56, 189, 248, 0.1);
+}
+
 .btn.danger {
-    background: rgba(255, 30, 86, 0.1);
+    background: rgba(255, 30, 86, 0.15);
     color: var(--impostor);
     border: 1px solid rgba(255, 30, 86, 0.3);
+}
+
+.btn.danger:active {
+    background: rgba(255, 30, 86, 0.2);
 }
 
 /* Botons d'acció flotants (bottom) */
@@ -305,8 +319,8 @@ label {
 .btn-remove {
     width: 3.5rem;
     border-radius: var(--radius-md);
-    border: 1px solid var(--border-color);
-    background: rgba(255, 30, 86, 0.1);
+    border: 1px solid rgba(255, 30, 86, 0.3);
+    background: rgba(255, 30, 86, 0.15);
     color: var(--impostor);
     font-size: 1.2rem;
     display: flex;
@@ -315,6 +329,12 @@ label {
     cursor: pointer;
     min-height: 48px;
     flex-shrink: 0;
+    transition: all 0.2s;
+}
+
+.btn-remove:active {
+    background: rgba(255, 30, 86, 0.25);
+    transform: scale(0.95);
 }
 
 /* --- Revelació de Rols --- */
@@ -396,7 +416,6 @@ label {
     font-size: 4rem;
     font-weight: 700;
     background: var(--surface);
-    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
     transition: 0.3s;
 }
 
@@ -612,10 +631,6 @@ label {
             <div class="glass-card">
                 <p class="subtitle" style="margin-bottom:1rem;">EN JOC</p>
                 <div id="game-players-list" style="display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center;"></div>
-            </div>
-
-            <div class="bottom-action">
-                <button id="btn-home" class="btn secondary">TORNAR A L'INICI</button>
             </div>
         </section>
 
