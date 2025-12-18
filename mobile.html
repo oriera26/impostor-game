@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>El Joc de l'Impostor - Edició Cyber</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700;900&display=swap" rel="stylesheet">
+    
+    <style>
+    :root {
+    /* Paleta Cyber-Misteri */
+    --bg-dark: #030712;
+    --surface: #111827;
+    --surface-highlight: #1f2937;
+    
+    --primary: #38bdf8; /* Sky Blue */
+    --primary-glow: rgba(56, 189, 248, 0.4);
+    
+    --text-main: #f3f4f6;
+    --text-muted: #9ca3af;
+    
+    --border-color: rgba(255, 255, 255, 0.1);
+    
+    /* Colors de Rol */
+    --impostor: #ff1e56; /* Neon Red */
+    --impostor-bg: rgba(255, 30, 86, 0.15);
+    
+    --bufo: #d946ef; /* Neon Purple */
+    --bufo-bg: rgba(217, 70, 239, 0.15);
+    
+    --civilian: #00e676; /* Neon Green */
+    --civilian-bg: rgba(0, 230, 118, 0.15);
+    
+    /* UI Variables */
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+body {
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+    display: flex;
+    justify-content: center;
+    background-image: 
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    touch-action: manipulation;
+}
+
+/* --- Fons Animats --- */
+.glow-orb {
+    position: fixed;
+    width: 60vw;
+    height: 60vw;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -2;
+    opacity: 0.25;
+    animation: orbFloat 15s infinite ease-in-out alternate;
+}
+
+@keyframes orbFloat {
+    0% { transform: translate(0, 0) scale(1); }
+    100% { transform: translate(40px, -40px) scale(1.1); }
+}
+
+/* --- Layout --- */
+.app-container {
+    width: 100%;
+    max-width: 500px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    position: relative;
+}
+
+/* --- Header --- */
+header {
+    margin: 0.5rem 0 1.5rem;
+    text-align: center;
+}
+
+.gradient-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    background: linear-gradient(135deg, #fff 30%, var(--text-muted));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -1px;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    font-family: 'Outfit', sans-serif;
+    color: var(--text-muted);
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+/* --- Pantalles --- */
+.screen {
+    display: none;
+    flex-direction: column;
+    flex: 1;
+    animation: fadeIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.screen.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(15px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Targetes UI --- */
+.glass-card {
+    background: rgba(17, 24, 39, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: 0 10px 30px -5px rgba(0,0,0,0.5);
+    margin-bottom: 1.25rem;
+}
+
+.glass-card.compact {
+    padding: 1rem;
+    gap: 0.875rem;
+}
+
+/* --- Inputs & Controles --- */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+}
+
+label {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.row-between {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.glass-input, select.glass-input {
+    background: var(--surface-highlight);
+    border: 2px solid transparent;
+    color: white;
+    padding: 0.875rem;
+    border-radius: var(--radius-md);
+    font-size: 1rem;
+    font-weight: 500;
+    width: 100%;
+    outline: none;
+    transition: 0.2s;
+    -webkit-appearance: none;
+    appearance: none;
+    min-height: 48px;
+}
+
+.glass-input:focus {
+    border-color: var(--primary);
+    background: var(--surface);
+}
+
+/* Sliders millorats */
+.range-input {
+    width: 100%;
+    accent-color: var(--primary);
+    height: 6px;
+    background: var(--surface-highlight);
+    border-radius: 999px;
+    appearance: none;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.range-input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 24px;
+    height: 24px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px var(--primary);
+}
+
+/* --- Botons --- */
+.btn {
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius-md);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    border: none;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 0.75rem;
+    min-height: 52px;
+}
+
+.btn:active { 
+    transform: scale(0.97); 
+}
+
+.btn.primary {
+    background: white;
+    color: var(--bg-dark);
+    box-shadow: 0 4px 20px rgba(255, 255, 255, 0.2);
+}
+
+.btn.secondary {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    color: var(--text-muted);
+}
+
+.btn.dashed {
+    border: 2px dashed var(--border-color);
+    background: rgba(255,255,255,0.03);
+    color: var(--primary);
+}
+
+.btn.danger {
+    background: rgba(255, 30, 86, 0.1);
+    color: var(--impostor);
+    border: 1px solid rgba(255, 30, 86, 0.3);
+}
+
+/* Botons d'acció flotants (bottom) */
+.bottom-action {
+    margin-top: auto;
+    padding-top: 1rem;
+    background: linear-gradient(to top, var(--bg-dark) 20%, transparent);
+    position: sticky;
+    bottom: 0;
+    padding-bottom: 1rem;
+}
+
+/* --- Llista Jugadors --- */
+.scroll-area {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-bottom: 1rem;
+    -webkit-overflow-scrolling: touch;
+}
+
+.player-input-row {
+    display: flex;
+    gap: 0.75rem;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.btn-remove {
+    width: 3.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: rgba(255, 30, 86, 0.1);
+    color: var(--impostor);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    min-height: 48px;
+    flex-shrink: 0;
+}
+
+/* --- Revelació de Rols --- */
+.role-card {
+    min-height: 360px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    border-width: 2px;
+    position: relative;
+    overflow: hidden;
+}
+
+.role-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 3rem;
+    font-weight: 900;
+    margin: 1rem 0;
+    letter-spacing: -0.05em;
+    text-shadow: 0 0 25px currentColor;
+}
+
+.word-display {
+    font-family: monospace;
+    font-size: 2rem;
+    font-weight: 700;
+    background: rgba(0,0,0,0.4);
+    padding: 0.875rem;
+    border-radius: var(--radius-sm);
+    width: 100%;
+    border: 1px dashed rgba(255,255,255,0.2);
+    word-break: break-word;
+}
+
+.divider {
+    width: 100%; 
+    height: 2px;
+    background: currentColor;
+    opacity: 0.3;
+    margin: 1.25rem 0;
+}
+
+/* Colors Rols */
+.role-impostor { 
+    border-color: var(--impostor); 
+    background: radial-gradient(circle at top right, var(--impostor-bg), rgba(17, 24, 39, 0.95));
+    color: var(--impostor);
+}
+.role-bufo { 
+    border-color: var(--bufo); 
+    background: radial-gradient(circle at top right, var(--bufo-bg), rgba(17, 24, 39, 0.95));
+    color: var(--bufo);
+}
+.role-civilian { 
+    border-color: var(--civilian); 
+    background: radial-gradient(circle at top right, var(--civilian-bg), rgba(17, 24, 39, 0.95));
+    color: var(--civilian);
+}
+
+.hidden { display: none !important; }
+.mt-large { margin-top: auto; }
+
+/* --- Timer Screen --- */
+.timer-container {
+    display: flex;
+    justify-content: center;
+    margin: 1.5rem 0;
+}
+
+.timer-circle {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    border: 6px solid var(--surface-highlight);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Outfit', monospace;
+    font-size: 4rem;
+    font-weight: 700;
+    background: var(--surface);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+    transition: 0.3s;
+}
+
+.timer-running {
+    border-color: var(--primary);
+    color: var(--primary);
+    animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+    from { box-shadow: 0 0 10px var(--primary-glow); }
+    to { box-shadow: 0 0 30px var(--primary-glow); }
+}
+
+.controls-row {
+    display: flex;
+    gap: 0.875rem;
+    margin-bottom: 1.5rem;
+}
+
+.tag {
+    background: var(--surface-highlight);
+    padding: 0.5rem 0.875rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    border: 1px solid var(--border-color);
+}
+
+/* --- Media Queries per a pantalles molt petites --- */
+@media (max-width: 400px) {
+    .app-container {
+        padding: 0.75rem;
+    }
+    
+    .gradient-text {
+        font-size: 2rem;
+    }
+    
+    .glass-card {
+        padding: 1rem;
+        gap: 1rem;
+    }
+    
+    .btn {
+        padding: 0.875rem 1rem;
+        min-height: 48px;
+    }
+    
+    .timer-circle {
+        width: 200px;
+        height: 200px;
+        font-size: 3.5rem;
+    }
+    
+    .role-title {
+        font-size: 2.5rem;
+    }
+    
+    .word-display {
+        font-size: 1.75rem;
+    }
+}
+
+/* --- Prevenir zoom en inputs en iOS --- */
+@media (max-width: 767px) {
+    input, select, textarea {
+        font-size: 16px !important;
+    }
+}
+
+/* --- Optimització per a Safari iOS --- */
+@supports (-webkit-touch-callout: none) {
+    .glass-card {
+        -webkit-backdrop-filter: blur(16px);
+    }
+    
+    body {
+        min-height: -webkit-fill-available;
+    }
+    
+    .app-container {
+        min-height: -webkit-fill-available;
+    }
+}
+    </style>
+</head>
+<body>
+
+    <div class="glow-orb" style="top: -10%; left: -10%; background: #38bdf8;"></div>
+    <div class="glow-orb" style="bottom: -10%; right: -10%; background: #d946ef;"></div>
+
+    <div class="app-container">
+        
+        <header>
+            <h1 class="gradient-text">IMPOSTOR</h1>
+            <p class="subtitle">Desxifra • Enganya • Sobreviu</p>
+        </header>
+
+        <!-- SCREEN 1: SETUP -->
+        <section id="setup-screen" class="screen active">
+            <div class="glass-card">
+                <div class="form-group">
+                    <label>Categoria</label>
+                    <select id="category-select" class="glass-input">
+                        <!-- JS fills this -->
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <div class="row-between">
+                        <label style="color:var(--impostor)">Impostors</label>
+                        <span id="impostor-count-display" style="font-weight:bold; font-size:1.2rem;">1</span>
+                    </div>
+                    <input type="range" id="impostor-range" min="1" max="10" value="1" class="range-input">
+                </div>
+
+                <div class="form-group">
+                    <div class="row-between">
+                        <label style="color:var(--bufo)">Bufons</label>
+                        <span id="bufo-count-display" style="font-weight:bold; font-size:1.2rem;">0</span>
+                    </div>
+                    <input type="range" id="bufo-range" min="0" max="10" value="0" class="range-input">
+                </div>
+
+                <div class="form-group">
+                    <div class="row-between">
+                        <label>Temps (seg)</label>
+                        <span id="timer-display" style="font-weight:bold; font-size:1.2rem;">180s</span>
+                    </div>
+                    <input type="range" id="timer-range" min="60" max="600" step="30" value="180" class="range-input">
+                </div>
+            </div>
+
+            <div class="bottom-action">
+                <button id="btn-setup-next" class="btn primary">CONFIGURAR JUGADORS</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 2: PLAYERS -->
+        <section id="players-screen" class="screen">
+            <div class="glass-card compact" style="margin-bottom:1rem;">
+                <div class="row-between">
+                    <span class="subtitle" style="font-size:0.8rem">MÍNIM NECESSARI:</span>
+                    <strong id="min-players-req" style="color:var(--primary); font-size:1.2rem;">0</strong>
+                </div>
+                <div class="row-between">
+                    <span class="subtitle" style="font-size:0.8rem">JUGADORS ACTUALS:</span>
+                    <strong id="current-players-count" style="color:white; font-size:1.2rem;">0</strong>
+                </div>
+            </div>
+            
+            <div id="players-list" class="scroll-area">
+                <!-- JS fills inputs -->
+            </div>
+
+            <button id="btn-add-player" class="btn dashed" style="margin-top:0.5rem">+ AFEGIR JUGADOR</button>
+            
+            <div class="bottom-action">
+                <button id="btn-start-game" class="btn primary">COMENÇAR PARTIDA</button>
+                <button onclick="showScreen('setup')" class="btn secondary">ENRERE</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 3: PASS PHONE -->
+        <section id="pass-screen" class="screen">
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
+                <p class="subtitle">PASSA EL MÒBIL A</p>
+                <h2 id="current-player-name" class="gradient-text" style="font-size:3rem; margin:1rem 0;">Nom</h2>
+                
+                <div class="glass-card compact" style="width:100%; margin-top:2rem;">
+                    <p style="color:var(--text-muted); margin-bottom:1rem;">Ets tu?</p>
+                    <button id="btn-reveal" class="btn primary">VEURE EL MEU ROL</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- SCREEN 4: REVEAL ROLE -->
+        <section id="reveal-screen" class="screen">
+            <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
+                <div id="role-card" class="glass-card role-card">
+                    <p class="subtitle">EL TEU ROL ÉS</p>
+                    <h2 id="role-title" class="role-title">ROL</h2>
+                    
+                    <div class="divider"></div>
+
+                    <div id="role-content"></div>
+
+                    <p id="bufo-msg" class="hidden" style="margin-top:1rem; font-style:italic; opacity:0.9;">
+                        Coneixes la paraula. Has de fer que et votin a tu sense fer-ho massa evident.
+                    </p>
+                </div>
+            </div>
+            
+            <div class="bottom-action">
+                <button id="btn-hide-pass" class="btn secondary">AMAGAR I PASSAR</button>
+            </div>
+        </section>
+
+        <!-- SCREEN 5: GAME TIMER -->
+        <section id="game-screen" class="screen">
+            <div class="timer-container">
+                <div class="timer-circle">
+                    <span id="game-timer">3:00</span>
+                </div>
+            </div>
+
+            <div class="controls-row">
+                <button id="btn-toggle-timer" class="btn primary" style="flex:2">PAUSA / CONTINUAR</button>
+                <button id="btn-end-game" class="btn danger" style="flex:1">FI</button>
+            </div>
+
+            <div class="glass-card">
+                <p class="subtitle" style="margin-bottom:1rem;">EN JOC</p>
+                <div id="game-players-list" style="display:flex; flex-wrap:wrap; gap:0.5rem; justify-content:center;"></div>
+            </div>
+
+            <div class="bottom-action">
+                <button id="btn-home" class="btn secondary">TORNAR A L'INICI</button>
+            </div>
+        </section>
+
+    </div>
+
+    <script>
+        // --- DADES ---
+        const CATEGORIES = {
+            "Animals": ["Gos", "Gat", "Elefant", "Lleó", "Tigre", "Girafa", "Mico", "Dofí", "Balena", "Àguila", "Pingüí", "Cangur", "Ós", "Llop", "Zebra", "Hipopòtam", "Rinoceront", "Cocodril", "Tortuga", "Granota"],
+            "Menjar": ["Pizza", "Hamburguesa", "Sushi", "Paella", "Truita", "Espaguetis", "Amanida", "Pollastre", "Bistec", "Peix", "Gelat", "Pastís", "Xocolata", "Fruita", "Verdura", "Pa", "Formatge", "Pernil", "Ou", "Arròs"],
+            "Objectes": ["Taula", "Cadira", "Ordinador", "Telèfon", "Llibre", "Bolígraf", "Cotxe", "Bicicleta", "Rellotge", "Ulleres", "Sabata", "Motxilla", "Clau", "Bombeta", "Plat", "Got", "Forquilla", "Ganivet", "Cullera", "Mirall"],
+            "Llocs": ["Plaja", "Muntanya", "Ciutat", "Poble", "Escola", "Hospital", "Parc", "Bosc", "Desert", "Selva", "Illa", "Castell", "Casa", "Botiga", "Aeroport", "Estació", "Cinema", "Teatre", "Museu", "Biblioteca"],
+            "Mix Complet": [] 
+        };
+
+        // Omplir Mix
+        Object.keys(CATEGORIES).forEach(key => {
+            if (key !== "Mix Complet") CATEGORIES["Mix Complet"].push(...CATEGORIES[key]);
+        });
+
+        // --- ESTAT ---
+        let gameState = {
+            settings: {
+                category: "Animals",
+                numImpostors: 1,
+                numBufos: 0,
+                timeSeconds: 180
+            },
+            players: [],
+            currentPlayerIndex: 0,
+            secretWord: "",
+            timeLeft: 0,
+            timerInterval: null,
+            isPaused: false
+        };
+
+        const screens = {
+            setup: document.getElementById('setup-screen'),
+            players: document.getElementById('players-screen'),
+            pass: document.getElementById('pass-screen'),
+            reveal: document.getElementById('reveal-screen'),
+            game: document.getElementById('game-screen')
+        };
+
+        // --- INICIALITZACIÓ ---
+        function init() {
+            // Select Categories
+            const catSelect = document.getElementById('category-select');
+            Object.keys(CATEGORIES).forEach(cat => {
+                const opt = document.createElement('option');
+                opt.value = cat;
+                opt.innerText = cat;
+                catSelect.appendChild(opt);
+            });
+
+            // Listeners
+            document.getElementById('impostor-range').addEventListener('input', (e) => {
+                document.getElementById('impostor-count-display').innerText = e.target.value;
+                gameState.settings.numImpostors = parseInt(e.target.value);
+                updateMinPlayersRequirement();
+            });
+
+            document.getElementById('bufo-range').addEventListener('input', (e) => {
+                document.getElementById('bufo-count-display').innerText = e.target.value;
+                gameState.settings.numBufos = parseInt(e.target.value);
+                updateMinPlayersRequirement();
+            });
+
+            document.getElementById('timer-range').addEventListener('input', (e) => {
+                document.getElementById('timer-display').innerText = e.target.value + 's';
+                gameState.settings.timeSeconds = parseInt(e.target.value);
+            });
+
+            document.getElementById('category-select').addEventListener('change', (e) => {
+                gameState.settings.category = e.target.value;
+            });
+
+            // Botons Navegació
+            document.getElementById('btn-setup-next').addEventListener('click', () => {
+                updateMinPlayersRequirement();
+                // Ensure we have minimal slots
+                const req = getMinPlayers();
+                const currentCount = document.querySelectorAll('.player-name-input').length;
+                if(currentCount < req) {
+                    for(let i=currentCount; i<req; i++) addPlayerInput();
+                }
+                showScreen('players');
+            });
+
+            document.getElementById('btn-add-player').addEventListener('click', addPlayerInput);
+            document.getElementById('btn-start-game').addEventListener('click', startGameLogic);
+            document.getElementById('btn-reveal').addEventListener('click', showRole);
+            document.getElementById('btn-hide-pass').addEventListener('click', nextTurn);
+            document.getElementById('btn-toggle-timer').addEventListener('click', toggleTimer);
+            document.getElementById('btn-end-game').addEventListener('click', resetGame);
+            document.getElementById('btn-home').addEventListener('click', resetGame);
+
+            // Inputs inicials (mínim 3 per defecte)
+            addPlayerInput(); addPlayerInput(); addPlayerInput();
+        }
+
+        // --- NAVEGACIÓ ---
+        function showScreen(screenName) {
+            Object.values(screens).forEach(s => s.classList.remove('active'));
+            screens[screenName].classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        // --- LÒGICA JUGADORS ---
+        function getMinPlayers() {
+            // Regla: (Impostors + Bufons) * 2. 
+            // Això assegura que els rols especials siguin com a màxim el 50% dels jugadors.
+            const specials = gameState.settings.numImpostors + gameState.settings.numBufos;
+            return Math.max(3, specials * 2);
+        }
+
+        function updateMinPlayersRequirement() {
+            const min = getMinPlayers();
+            document.getElementById('min-players-req').innerText = min;
+            updateCurrentPlayerCount();
+        }
+
+        function updateCurrentPlayerCount() {
+            const count = document.querySelectorAll('.player-name-input').length;
+            document.getElementById('current-players-count').innerText = count;
+        }
+
+        function addPlayerInput() {
+            const list = document.getElementById('players-list');
+            // Límit tècnic alt (per exemple 50)
+            if (list.children.length >= 50) return;
+
+            const div = document.createElement('div');
+            div.className = 'player-input-row';
+            
+            const num = list.children.length + 1;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.className = 'glass-input player-name-input';
+            input.placeholder = `Jugador ${num}`;
+            // Auto-focus només si no estem en càrrega inicial massiva
+            
+            const btn = document.createElement('div');
+            btn.className = 'btn-remove';
+            btn.innerHTML = '✕';
+            btn.onclick = () => {
+                div.remove();
+                updateCurrentPlayerCount();
+            };
+
+            div.appendChild(input);
+            div.appendChild(btn);
+            list.appendChild(div);
+            
+            updateCurrentPlayerCount();
+        }
+
+        // --- INICI PARTIDA ---
+        function startGameLogic() {
+            const inputs = document.querySelectorAll('.player-name-input');
+            const names = Array.from(inputs).map(i => i.value.trim()).filter(n => n.length > 0);
+
+            const minReq = getMinPlayers();
+
+            if (names.length < minReq) {
+                alert(`Falten jugadors! Per a aquesta configuració necessites mínim ${minReq} jugadors.`);
+                return;
+            }
+
+            // Assignar Rols
+            let roles = [];
+            for(let i=0; i<gameState.settings.numImpostors; i++) roles.push('IMPOSTOR');
+            for(let i=0; i<gameState.settings.numBufos; i++) roles.push('BUFO');
+            
+            // La resta ciutadans
+            while(roles.length < names.length) roles.push('CIVILIAN');
+
+            // Barrejar (Fisher-Yates)
+            for (let i = roles.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [roles[i], roles[j]] = [roles[j], roles[i]];
+            }
+
+            // Triar Paraula
+            const catWords = CATEGORIES[gameState.settings.category];
+            gameState.secretWord = catWords[Math.floor(Math.random() * catWords.length)];
+
+            // Construir objectes
+            gameState.players = names.map((name, i) => ({
+                name: name,
+                role: roles[i],
+                word: roles[i] === 'IMPOSTOR' ? null : gameState.secretWord
+            }));
+
+            gameState.currentPlayerIndex = 0;
+            updatePassScreen();
+            showScreen('pass');
+        }
+
+        function updatePassScreen() {
+            const player = gameState.players[gameState.currentPlayerIndex];
+            document.getElementById('current-player-name').innerText = player.name;
+        }
+
+        function showRole() {
+            const player = gameState.players[gameState.currentPlayerIndex];
+            const card = document.getElementById('role-card');
+            const title = document.getElementById('role-title');
+            const content = document.getElementById('role-content');
+            const bufoMsg = document.getElementById('bufo-msg');
+
+            // Reset
+            card.classList.remove('role-impostor', 'role-bufo', 'role-civilian');
+            bufoMsg.classList.add('hidden');
+            content.innerHTML = '';
+
+            if (player.role === 'IMPOSTOR') {
+                card.classList.add('role-impostor');
+                title.innerText = "IMPOSTOR";
+                content.innerHTML = '<p style="font-size:1.2rem; line-height:1.5;">No saps la paraula.<br>Convence\'ls que ets un d\'ells.</p>';
+            } else if (player.role === 'BUFO') {
+                card.classList.add('role-bufo');
+                title.innerText = "BUFÓ";
+                content.innerHTML = `<p class="subtitle" style="margin-bottom:0.5rem; opacity:0.8;">PARAULA SECRETA:</p><p class="word-display">${player.word}</p>`;
+                bufoMsg.classList.remove('hidden');
+            } else {
+                card.classList.add('role-civilian');
+                title.innerText = "CIUTADÀ";
+                content.innerHTML = `<p class="subtitle" style="margin-bottom:0.5rem; opacity:0.8;">PARAULA SECRETA:</p><p class="word-display">${player.word}</p>`;
+            }
+
+            showScreen('reveal');
+        }
+
+        function nextTurn() {
+            gameState.currentPlayerIndex++;
+            if (gameState.currentPlayerIndex >= gameState.players.length) {
+                initGameRound();
+            } else {
+                updatePassScreen();
+                showScreen('pass');
+            }
+        }
+
+        // --- TIMER ---
+        function initGameRound() {
+            gameState.timeLeft = gameState.settings.timeSeconds;
+            updateTimerDisplay();
+            
+            const container = document.getElementById('game-players-list');
+            container.innerHTML = '';
+            gameState.players.forEach(p => {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.innerText = p.name;
+                container.appendChild(tag);
+            });
+
+            showScreen('game');
+            startTimer();
+        }
+
+        function startTimer() {
+            gameState.isPaused = false;
+            document.getElementById('btn-toggle-timer').innerText = "PAUSA";
+            document.querySelector('.timer-circle').classList.add('timer-running');
+            
+            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            
+            gameState.timerInterval = setInterval(() => {
+                gameState.timeLeft--;
+                updateTimerDisplay();
+                if (gameState.timeLeft <= 0) {
+                    clearInterval(gameState.timerInterval);
+                    gameState.timerInterval = null;
+                    document.querySelector('.timer-circle').classList.remove('timer-running');
+                    alert("S'ha acabat el temps! A votar!");
+                }
+            }, 1000);
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('btn-toggle-timer');
+            const circle = document.querySelector('.timer-circle');
+
+            if (gameState.timerInterval) {
+                // Pause
+                clearInterval(gameState.timerInterval);
+                gameState.timerInterval = null;
+                gameState.isPaused = true;
+                btn.innerText = "CONTINUAR";
+                circle.classList.remove('timer-running');
+            } else {
+                startTimer();
+            }
+        }
+
+        function updateTimerDisplay() {
+            const m = Math.floor(gameState.timeLeft / 60);
+            const s = gameState.timeLeft % 60;
+            document.getElementById('game-timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
+        }
+
+        function resetGame() {
+            if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+            gameState.timerInterval = null;
+            showScreen('setup');
+        }
+
+        // Init
+        init();
+    </script>
+</body>
+</html>
