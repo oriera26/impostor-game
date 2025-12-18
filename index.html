@@ -167,12 +167,6 @@
         margin-top: 0.5rem;
     }
 
-    .range-input::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 24px; height: 24px;
-        background: white; border-radius: 50%;
-    }
-
     .btn {
         padding: 1rem 1.25rem;
         border-radius: var(--radius-md);
@@ -320,7 +314,7 @@
             <p class="subtitle">Desxifra • Enganya • Sobreviu</p>
         </header>
 
-        <!-- SCREEN 1: SETUP -->
+        <!-- PANTALLA 1: CONFIGURACIÓ -->
         <section id="setup-screen" class="screen active">
             <div class="glass-card">
                 <div style="display: flex; flex-direction: column; gap: 0.5rem;">
@@ -358,7 +352,7 @@
             </div>
         </section>
 
-        <!-- SCREEN 2: PLAYERS -->
+        <!-- PANTALLA 2: JUGADORS -->
         <section id="players-screen" class="screen">
             <div class="glass-card" style="padding:1rem; margin-bottom:1rem; flex-direction:row; justify-content:space-around;">
                 <div style="text-align:center"><p class="subtitle" style="font-size:0.7rem">MÍNIM</p><strong id="min-players-req">3</strong></div>
@@ -375,7 +369,7 @@
             </div>
         </section>
 
-        <!-- SCREEN 3: PASS PHONE -->
+        <!-- PANTALLA 3: PASSA EL MÒBIL -->
         <section id="pass-screen" class="screen">
             <div style="flex:1; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center;">
                 <p class="subtitle">PASSA EL MÒBIL A</p>
@@ -384,7 +378,7 @@
             </div>
         </section>
 
-        <!-- SCREEN 4: REVEAL ROLE -->
+        <!-- PANTALLA 4: REVELAR ROL -->
         <section id="reveal-screen" class="screen">
             <div style="flex:1; display:flex; flex-direction:column; justify-content:center;">
                 <div id="role-card" class="glass-card role-card">
@@ -402,7 +396,7 @@
             </div>
         </section>
 
-        <!-- SCREEN 5: GAME TIMER -->
+        <!-- PANTALLA 5: TEMPORITZADOR JOC -->
         <section id="game-screen" class="screen">
             <div style="display:flex; justify-content:center; margin:1.5rem 0;">
                 <div class="timer-circle"><span id="game-timer">3:00</span></div>
@@ -420,60 +414,25 @@
     </div>
 
     <script>
-        // --- BASE DE DADES MASSIVA (+1000 paraules) ---
+        // --- BASE DE DADES ---
         const CATEGORIES = {
-            "Animals": [
-                "Gos", "Gat", "Elefant", "Lleó", "Tigre", "Girafa", "Mico", "Dofí", "Balena", "Àguila", "Pingüí", "Cangur", "Ós", "Llop", "Zebra", "Hipopòtam", "Rinoceront", "Cocodril", "Tortuga", "Granota", "Cavall", "Porc", "Vaca", "Ovella", "Gallina", "Ratolí", "Serp", "Tauró", "Papallona", "Abella",
-                "Formiga", "Aranya", "Escorpí", "Llangardaix", "Camaleó", "Cranc", "Llagosta", "Polp", "Medusa", "Estrella de mar", "Cavallet de mar", "Pingüí emperador", "Flamenc", "Tucà", "Lloro", "Mussol", "Corb", "Cigne", "Ànec", "Paó", "Estruç", "Koala", "Panda", "Goril·la", "Ximpanzé", "Lleó marí", "Morsa", "Foca", "Nutria", "Castor",
-                "Esquirol", "Ratpenat", "Talp", "Eriçó", "Conill", "Llebre", "Cérvol", "Ant", "Ren", "Búfal", "Bisó", "Toro", "Ase", "Mula", "Camell", "Dromedari", "Llama", "Alpaca", "Guepard", "Leopard", "Pantera", "Jaguar", "Lince", "Hiena", "Xacal", "Guineu", "Coiot", "Ós panda", "Ós polar", "Ós bru",
-                "Teixó", "Mofeta", "Fura", "Ermini", "Visó", "Suricata", "Lèmur", "Marmota", "Gòfer", "Hàmster", "Cobai", "Xinxilla", "Jerbu", "Puercoespín", "Armadillo", "Pangolí", "Orycteropus", "Tapir", "Okapi", "Gaur", "Iak", "Mufló", "Isard", "Gamo", "Cabirol", "Senglar", "Pecarí", "Hipopòtam nan", "Manatí", "Dugong"
-            ],
-            "Menjar": [
-                "Pizza", "Hamburguesa", "Sushi", "Paella", "Truita", "Espaguetis", "Amanida", "Pollastre", "Bistec", "Peix", "Gelat", "Pastís", "Xocolata", "Poma", "Plàtan", "Pa", "Formatge", "Pernil", "Ou", "Arròs", "Llenties", "Canelons", "Croquetes", "Sopa", "Iogurt", "Meló", "Maduixa", "Patates", "Ceba", "Tomàquet",
-                "Alvocat", "Mango", "Pinya", "Raïm", "Cirera", "Pera", "Taronja", "Llimona", "Llima", "Síndria", "Préssec", "Albercoc", "Pruna", "Figa", "Kiwi", "Magrana", "Nabiu", "Gerds", "Mora", "Coco", "Nou", "Ametlla", "Avellana", "Cacauet", "Pistatxo", "Castaanya", "Dàtil", "Passes", "Pinyó", "Mel",
-                "Sucre", "Sal", "Pebre", "Oli d'oliva", "Vinagre", "Mostassa", "Maionesa", "Quètxup", "Salsa de soja", "Curri", "Orenga", "Alfàbrega", "Julivert", "Romaní", "Farigola", "Safrà", "Canela", "Vainilla", "Cafè", "Te", "Llet", "Mantega", "Nata", "Formatge fresc", "Formatge blau", "Parmesà", "Mozzarella", "Macarrons", "Lasanya", "Raviolis",
-                "Risotto", "Cuscús", "Hummus", "Falàfel", "Kebab", "Taco", "Burrito", "Enchilada", "Nachos", "Guacamole", "Gaspatxo", "Salmorejo", "Fideuà", "Escudella", "Bacallà", "Llobarro", "Orada", "Salmó", "Truita de riu", "Sardina", "Boqueró", "Tonyina", "Gambes", "Llagostins", "Musclos", "Cloïsses", "Petxines de pelegrí", "Calamars", "Sípia", "Pop a la gallega"
-            ],
-            "Objectes": [
-                "Taula", "Cadira", "Ordinador", "Telèfon", "Llibre", "Bolígraf", "Cotxe", "Bicicleta", "Rellotge", "Ulleres", "Sabata", "Motxilla", "Clau", "Bombeta", "Plat", "Got", "Forquilla", "Ganivet", "Cullera", "Mirall", "Llapis", "Tisores", "Ventilador", "Comandament", "Raspall", "Paraigua", "Escala", "Martell", "Llit", "Sofà",
-                "Armari", "Estanteria", "Llum", "Quadre", "Catifa", "Cortina", "Finestra", "Porta", "Televisió", "Ràdio", "Altaveu", "Càmera", "Auriculars", "Tauleta", "Teclat", "Ratolí", "Monitor", "Impressora", "Escàner", "Consola", "Comandament", "Cable", "Endoll", "Bateria", "Pila", "Lot", "Espelma", "Mistu", "Encenedor", "Cendrer",
-                "Ampolla", "Gerra", "Tassa", "Bol", "Paella", "Olla", "Cassola", "Colador", "Rallador", "Batedora", "Torradora", "Cafetera", "Microones", "Forn", "Nevera", "Congelador", "Rentavaixelles", "Rentadora", "Assecadora", "Planxa", "Aspiradora", "Escura", "Recollidor", "Cubell", "Fregona", "Drap", "Sabó", "Xampú", "Dentrífic", "Raspall de dents",
-                "Pinta", "Assecador", "Maquineta d'afaitar", "Maquillatge", "Perfum", "Joia", "Anell", "Collar", "Polsera", "Arracada", "Rellotge de polsera", "Cartera", "Moneder", "Bossa", "Maleta", "Paraigua", "Bastó", "Casc", "Guant", "Bufanda", "Gorret", "Barret", "Cinturó", "Corbata", "Mocador", "Abric", "Jaqueta", "Pantalons", "Camisa", "Samarreta"
-            ],
-            "Llocs": [
-                "Platja", "Muntanya", "Ciutat", "Poble", "Escola", "Hospital", "Parc", "Bosc", "Desert", "Selva", "Illa", "Castell", "Casa", "Botiga", "Aeroport", "Estació", "Cinema", "Teatre", "Museu", "Biblioteca", "Gimnàs", "Farmàcia", "Restaurant", "Mercat", "Església", "Universitat", "Zoo", "Lluna", "Mart", "Infern",
-                "Cel", "Oceà", "Riu", "Llac", "Cascada", "Volcà", "Cova", "Vall", "Canó", "Penya-segat", "Far", "Port", "Pont", "Túnel", "Autopista", "Carrer", "Plaça", "Avinguda", "Gratacel", "Edifici", "Apartament", "Hotel", "Hostal", "Càmping", "Refugi", "Granja", "Hort", "Vinya", "Fàbrica", "Magatzem",
-                "Oficina", "Banc", "Ajuntament", "Jutjat", "Presó", "Comissaria", "Parc de bombers", "Estadi", "Poliesportiu", "Piscina", "Pista de tennis", "Camp de futbol", "Circuit de carreres", "Parc d'atraccions", "Aquari", "Planetari", "Observatori", "Casino", "Discoteca", "Bar", "Pub", "Cafeteria", "Pastisseria", "Fleca", "Carnisseria", "Peixateria", "Supermercat", "Centre comercial", "Llibreria", "Quiosc",
-                "Perruqueria", "Tintoreria", "Taller", "Benzinera", "Rentat de cotxes", "Aparcament", "Cementiri", "Monestir", "Temple", "Mesquita", "Sinagoga", "Pagoda", "Piràmide", "Ruïnes", "Monument", "Palau", "Ambaixada", "Consolat", "Base militar", "Aeroport", "Heliport", "Port espacial", "Estació d'autobusos", "Estació de tren", "Estació de metro", "Parada de tramvia", "Port de creuers", "Marina", "Dic", "Moll"
-            ],
-            "Ciència i Tecnologia": [
-                "Àtom", "Molècula", "Cèl·lula", "ADN", "Proteïna", "Enzim", "Bacteri", "Virus", "Hormona", "Neurona", "Cervell", "Cor", "Pulmó", "Fetge", "Ronyó", "Os", "Múscul", "Pell", "Sang", "Gen", "Cromosoma", "Evolució", "Selecció natural", "Espècie", "Ecosistema", "Biodiversitat", "Clima", "Atmosfera", "Hidrosfera", "Geosfera",
-                "Gravetat", "Magnetisme", "Electricitat", "Llum", "So", "Calor", "Energia", "Força", "Massa", "Velocitat", "Acceleració", "Temps", "Espai", "Matèria", "Àtom", "Electró", "Protó", "Neutró", "Quark", "Fotó", "Llàser", "Radiació", "Fissió nuclear", "Fusió nuclear", "Relativitat", "Quàntica", "Big Bang", "Galàxia", "Estrella", "Planeta",
-                "Satèl·lit", "Cometa", "Asteroide", "Meteorit", "Forat negre", "Telescopi", "Microscopi", "Satèl·lit artificial", "Coet", "Sonda espacial", "Estació espacial", "Robot", "Intel·ligència artificial", "Algoritme", "Programari", "Maquinari", "Internet", "Xarxa", "Servidor", "Base de dades", "Xifratge", "Blockchain", "Realitat virtual", "Realitat augmentada", "Impressió 3D", "Nanotecnologia", "Biotecnologia", "Enginyeria genètica", "Energia solar", "Energia eòlica"
-            ],
-            "Arts i Cultura": [
-                "Pintura", "Escultura", "Arquitectura", "Música", "Dansa", "Teatre", "Cinema", "Literatura", "Poesia", "Fotografia", "Còmic", "Videojoc", "Disseny", "Moda", "Gastronomia", "Folklore", "Mitologia", "Religió", "Filosofia", "Història", "Arqueologia", "Antropologia", "Sociologia", "Psicologia", "Economia", "Política", "Dret", "Educació", "Llenguatge", "Escriptura",
-                "Quadre", "Estàtua", "Catedral", "Simfonia", "Òpera", "Ballet", "Obra de teatre", "Pel·lícula", "Novel·la", "Poema", "Assaig", "Biografia", "Diccionari", "Enciclopèdia", "Revista", "Diari", "Guió", "Partitura", "Pinzell", "Cincell", "Piano", "Guitarra", "Violí", "Flauta", "Trompeta", "Bateria", "Veu", "Càmera", "Micròfon", "Escenari",
-                "Museu", "Galeria d'art", "Auditori", "Conservatori", "Acadèmia", "Festival", "Concurs", "Premi", "Exposició", "Subhasta", "Crítica", "Estètica", "Estil", "Gènere", "Moviment artístic", "Renaixement", "Barroc", "Il·lustració", "Romanticisme", "Impressionisme", "Surrealisme", "Cubisme", "Art pop", "Minimalisme", "Art contemporani", "Patrimoni de la Humanitat", "Tradició", "Llegenda", "Conte", "Faula"
-            ],
-            "Esports": [
-                "Futbol", "Bàsquet", "Tennis", "Ciclisme", "Natació", "Atletisme", "Gimnàstica", "Handbol", "Voleibol", "Rugbi", "Béisbol", "Golf", "Hoquei", "Boxa", "Judo", "Karate", "Esquí", "Snowboard", "Surf", "Vela", "Rem", "Piragüisme", "Escalada", "Senderisme", "Motociclisme", "Automobilisme", "Escacs", "Billar", "Dards", "Ping-pong",
-                "Pilota", "Raqueta", "Bicicleta", "Patins", "Taula de surf", "Esquís", "Casc", "Guants", "Botes", "Samarreta", "Pantalons curts", "Xandall", "Banyador", "Ulleres de natació", "Xarxa", "Porteria", "Cistella", "Camp", "Pista", "Estadi", "Gimnàs", "Piscina", "Circuit", "Àrbitre", "Entrenador", "Jugador", "Equip", "Club", "Lliga", "Campionat",
-                "Medalla", "Trofeu", "Copa", "Rècord", "Gool", "Punt", "Set", "Match", "Carrera", "Salt", "Llançament", "Marató", "Triatló", "Jocs Olímpics", "Mundial", "Torneig", "Entrenament", "Dieta", "Dopatge", "Fair play", "Afició", "Estadi", "Banqueta", "Vestuari", "Fitxatge", "Traspàs", "Retirada", "Debut", "Victoria", "Derrota"
-            ],
+            "Animals": ["Gos", "Gat", "Elefant", "Lleó", "Tigre", "Girafa", "Mico", "Dofí", "Balena", "Àguila", "Pingüí", "Cangur", "Ós", "Llop", "Zebra", "Hipopòtam", "Rinoceront", "Cocodril", "Tortuga", "Granota", "Cavall", "Porc", "Vaca", "Ovella", "Gallina", "Ratolí", "Serp", "Tauró", "Papallona", "Abella", "Formiga", "Aranya", "Escorpí", "Llangardaix", "Camaleó", "Cranc", "Llagosta", "Polp", "Medusa", "Estrella de mar", "Cavallet de mar", "Flamenc", "Tucà", "Lloro", "Mussol", "Corb", "Cigne", "Ànec", "Paó", "Estruç", "Koala", "Panda", "Goril·la", "Ximpanzé", "Lleó marí", "Morsa", "Foca", "Nutria", "Castor", "Esquirol", "Ratpenat", "Talp", "Eriçó", "Conill", "Llebre", "Cérvol", "Ant", "Ren", "Búfal", "Bisó", "Toro", "Ase", "Mula", "Camell", "Dromedari", "Llama", "Alpaca", "Guepard", "Leopard", "Pantera", "Jaguar", "Lince", "Hiena", "Xacal", "Guineu", "Coiot", "Ós polar", "Ós bru", "Teixó", "Mofeta", "Fura", "Ermini", "Visó", "Suricata", "Lèmur", "Marmota", "Gòfer", "Hàmster", "Cobai", "Xinxilla", "Jerbu", "Porc espí", "Armadillo", "Pangolí", "Orycteropus", "Tapir", "Okapi", "Gaur", "Iak", "Mufló", "Isard", "Gamo", "Cabirol", "Senglar", "Pecarí", "Manatí", "Dugong"],
+            "Menjar": ["Pizza", "Hamburguesa", "Sushi", "Paella", "Truita", "Espaguetis", "Amanida", "Pollastre", "Bistec", "Peix", "Gelat", "Pastís", "Xocolata", "Poma", "Plàtan", "Pa", "Formatge", "Pernil", "Ou", "Arròs", "Llenties", "Canelons", "Croquetes", "Sopa", "Iogurt", "Meló", "Maduixa", "Patates", "Ceba", "Tomàquet", "Alvocat", "Mango", "Pinya", "Raïm", "Cirera", "Pera", "Taronja", "Llimona", "Llima", "Síndria", "Préssec", "Albercoc", "Pruna", "Figa", "Kiwi", "Magrana", "Nabiu", "Gerds", "Mora", "Coco", "Nou", "Ametlla", "Avellana", "Cacauet", "Pistatxo", "Castaanya", "Dàtil", "Passes", "Pinyó", "Mel", "Sucre", "Sal", "Pebre", "Oli d'oliva", "Vinagre", "Mostassa", "Maionesa", "Quètxup", "Salsa de soja", "Curri", "Orenga", "Alfàbrega", "Julivert", "Romaní", "Farigola", "Safrà", "Canela", "Vainilla", "Cafè", "Te", "Llet", "Mantega", "Nata", "Formatge blau", "Parmesà", "Mozzarella", "Macarrons", "Lasanya", "Raviolis", "Risotto", "Cuscús", "Hummus", "Falàfel", "Kebab", "Taco", "Burrito", "Enchilada", "Nachos", "Guacamole", "Gaspatxo", "Salmorejo", "Fideuà", "Escudella", "Bacallà", "Llobarro", "Orada", "Salmó", "Truita de riu", "Sardina", "Boqueró", "Tonyina", "Gambes", "Llagostins", "Musclos", "Cloïsses", "Calamars", "Sípia", "Pop"],
+            "Objectes": ["Taula", "Cadira", "Ordinador", "Telèfon", "Llibre", "Bolígraf", "Cotxe", "Bicicleta", "Rellotge", "Ulleres", "Sabata", "Motxilla", "Clau", "Bombeta", "Plat", "Got", "Forquilla", "Ganivet", "Cullera", "Mirall", "Llapis", "Tisores", "Ventilador", "Comandament", "Raspall", "Paraigua", "Escala", "Martell", "Llit", "Sofà", "Armari", "Estanteria", "Llum", "Quadre", "Catifa", "Cortina", "Finestra", "Porta", "Televisió", "Ràdio", "Altaveu", "Càmera", "Auriculars", "Tauleta", "Teclat", "Ratolí", "Monitor", "Impressora", "Escàner", "Consola", "Cable", "Endoll", "Bateria", "Pila", "Lot", "Espelma", "Mistu", "Encenedor", "Cendrer", "Ampolla", "Gerra", "Tassa", "Bol", "Paella", "Olla", "Cassola", "Colador", "Rallador", "Batedora", "Torradora", "Cafetera", "Microones", "Forn", "Nevera", "Congelador", "Rentavaixelles", "Rentadora", "Assecadora", "Planxa", "Aspiradora", "Escura", "Recollidor", "Cubell", "Fregona", "Drap", "Sabó", "Xampú", "Dentrífic", "Pinta", "Assecador", "Maquineta d'afaitar", "Maquillatge", "Perfum", "Joia", "Anell", "Collar", "Polsera", "Arracada", "Cartera", "Moneder", "Bossa", "Maleta", "Bastó", "Casc", "Guant", "Bufanda", "Gorret", "Barret", "Cinturó", "Corbata", "Mocador", "Abric", "Jaqueta", "Pantalons", "Camisa", "Samarreta"],
+            "Llocs": ["Platja", "Muntanya", "Ciutat", "Poble", "Escola", "Hospital", "Parc", "Bosc", "Desert", "Selva", "Illa", "Castell", "Casa", "Botiga", "Aeroport", "Estació", "Cinema", "Teatre", "Museu", "Biblioteca", "Gimnàs", "Farmàcia", "Restaurant", "Mercat", "Església", "Universitat", "Zoo", "Lluna", "Mart", "Infern", "Cel", "Oceà", "Riu", "Llac", "Cascada", "Volcà", "Cova", "Vall", "Canó", "Penya-segat", "Far", "Port", "Pont", "Túnel", "Autopista", "Carrer", "Plaça", "Avinguda", "Gratacel", "Edifici", "Apartament", "Hotel", "Hostal", "Càmping", "Refugi", "Granja", "Hort", "Vinya", "Fàbrica", "Magatzem", "Oficina", "Banc", "Ajuntament", "Jutjat", "Presó", "Comissaria", "Estadi", "Poliesportiu", "Piscina", "Camp de futbol", "Parc d'atraccions", "Aquari", "Planetari", "Observatori", "Casino", "Discoteca", "Bar", "Pub", "Cafeteria", "Pastisseria", "Fleca", "Carnisseria", "Peixateria", "Supermercat", "Centre comercial", "Llibreria", "Quiosc", "Perruqueria", "Tintoreria", "Taller", "Benzinera", "Aparcament", "Cementiri", "Monestir", "Temple", "Mesquita", "Sinagoga", "Pagoda", "Piràmide", "Ruïnes", "Monument", "Palau", "Ambaixada", "Consolat", "Base militar", "Heliport", "Port espacial", "Estació d'autobusos", "Estació de tren", "Marina", "Moll"],
+            "Ciència i Tecnologia": ["Àtom", "Molècula", "Cèl·lula", "ADN", "Proteïna", "Enzim", "Bacteri", "Virus", "Hormona", "Neurona", "Cervell", "Cor", "Pulmó", "Fetge", "Ronyó", "Os", "Múscul", "Pell", "Sang", "Gen", "Cromosoma", "Evolució", "Selecció natural", "Espècie", "Ecosistema", "Biodiversitat", "Clima", "Atmosfera", "Gravetat", "Magnetisme", "Electricitat", "Llum", "So", "Calor", "Energia", "Força", "Massa", "Velocitat", "Temps", "Espai", "Matèria", "Electró", "Protó", "Neutró", "Quark", "Fotó", "Llàser", "Radiació", "Fissió nuclear", "Fusió nuclear", "Relativitat", "Quàntica", "Big Bang", "Galàxia", "Estrella", "Planeta", "Satèl·lit", "Cometa", "Asteroide", "Meteorit", "Forat negre", "Telescopi", "Microscopi", "Satèl·lit artificial", "Coet", "Sonda espacial", "Estació espacial", "Robot", "Intel·ligència artificial", "Algoritme", "Programari", "Maquinari", "Internet", "Xarxa", "Servidor", "Base de dades", "Xifratge", "Blockchain", "Realitat virtual", "Realitat augmentada", "Impressió 3D", "Nanotecnologia", "Biotecnologia", "Energia solar", "Energia eòlica"],
+            "Arts i Cultura": ["Pintura", "Escultura", "Arquitectura", "Música", "Dansa", "Teatre", "Cinema", "Literatura", "Poesia", "Fotografia", "Còmic", "Videojoc", "Disseny", "Moda", "Gastronomia", "Folklore", "Mitologia", "Religió", "Filosofia", "Història", "Arqueologia", "Antropologia", "Sociologia", "Psicologia", "Economia", "Política", "Dret", "Educació", "Llenguatge", "Escriptura", "Quadre", "Estàtua", "Catedral", "Simfonia", "Òpera", "Ballet", "Pel·lícula", "Novel·la", "Poema", "Assaig", "Biografia", "Diccionari", "Enciclopèdia", "Revista", "Diari", "Guió", "Partitura", "Pinzell", "Cincell", "Piano", "Guitarra", "Violí", "Flauta", "Trompeta", "Bateria", "Veu", "Micròfon", "Escenari", "Museu", "Auditori", "Conservatori", "Acadèmia", "Festival", "Premi", "Exposició", "Subhasta", "Crítica", "Estètica", "Renaixement", "Barroc", "Il·lustració", "Romanticisme", "Impressionisme", "Surrealisme", "Cubisme", "Art pop", "Minimalisme", "Art contemporani", "Patrimoni de la Humanitat", "Tradició", "Llegenda", "Conte", "Faula"],
+            "Esports": ["Futbol", "Bàsquet", "Tennis", "Ciclisme", "Natació", "Atletisme", "Gimnàstica", "Handbol", "Voleibol", "Rugbi", "Béisbol", "Golf", "Hoquei", "Boxa", "Judo", "Karate", "Esquí", "Snowboard", "Surf", "Vela", "Rem", "Piragüisme", "Escalada", "Senderisme", "Motociclisme", "Automobilisme", "Escacs", "Billar", "Dards", "Ping-pong", "Pilota", "Raqueta", "Bicicleta", "Patins", "Taula de surf", "Esquís", "Casc", "Guants", "Botes", "Samarreta", "Xandall", "Banyador", "Xarxa", "Porteria", "Cistella", "Camp", "Pista", "Estadi", "Gimnàs", "Piscina", "Circuit", "Àrbitre", "Entrenador", "Jugador", "Equip", "Club", "Lliga", "Campionat", "Medalla", "Trofeu", "Copa", "Rècord", "Gol", "Punt", "Set", "Marató", "Triatló", "Jocs Olímpics", "Mundial", "Torneig", "Entrenament", "Dieta", "Fair play", "Afició", "Banqueta", "Vestuari", "Fitxatge", "Traspàs", "Retirada", "Victoria", "Derrota"],
             "Mix Complet": []
         };
 
-        // Generar Mix i completar fins a >1000
-        (function fillWords() {
+        (function setupMix() {
             let all = [];
             Object.keys(CATEGORIES).forEach(k => { if(k !== "Mix Complet") all.push(...CATEGORIES[k]); });
-            CATEGORIES["Mix Complet"] = all;
-            
-            // Si faltessin per arribar a 1000, podríem afegir variacions o més llistes, 
-            // però amb les llistes de dalt ja tenim una base molt sòlida per a un joc de mòbil.
+            CATEGORIES["Mix Complet"] = [...new Set(all)]; // Elimina duplicats
         })();
 
+        // --- ESTAT DEL JOC ---
         let gameState = {
             settings: { category: "Mix Complet", numImpostors: 1, numBufos: 0, timeSeconds: 180 },
             players: [],
@@ -496,11 +455,12 @@
             const catSelect = document.getElementById('category-select');
             Object.keys(CATEGORIES).forEach(cat => {
                 const opt = document.createElement('option');
-                opt.value = cat; opt.innerText = cat + ` (${CATEGORIES[cat].length})`;
+                opt.value = cat; opt.innerText = `${cat} (${CATEGORIES[cat].length})`;
                 catSelect.appendChild(opt);
             });
             catSelect.value = "Mix Complet";
 
+            // Controls sliders
             document.getElementById('impostor-range').oninput = (e) => {
                 document.getElementById('impostor-count-display').innerText = e.target.value;
                 gameState.settings.numImpostors = parseInt(e.target.value);
@@ -516,13 +476,13 @@
                 gameState.settings.timeSeconds = parseInt(e.target.value);
             };
 
+            // Botons navegació
             document.getElementById('btn-setup-next').onclick = () => {
                 const req = getMinPlayers();
                 const currentInputs = document.querySelectorAll('.player-name-input').length;
                 if(currentInputs < req) for(let i = currentInputs; i < req; i++) addPlayerInput();
                 showScreen('players');
             };
-
             document.getElementById('btn-back-setup').onclick = () => showScreen('setup');
             document.getElementById('btn-add-player').onclick = addPlayerInput;
             document.getElementById('btn-start-game').onclick = startGameLogic;
@@ -531,7 +491,7 @@
             document.getElementById('btn-toggle-timer').onclick = toggleTimer;
             document.getElementById('btn-end-game').onclick = resetGame;
 
-            // Default players
+            // Inici amb 3 slots
             for(let i=0; i<3; i++) addPlayerInput();
             updateMinPlayersRequirement();
         }
@@ -543,7 +503,7 @@
         }
 
         function getMinPlayers() {
-            return Math.max(3, gameState.settings.numImpostors + gameState.settings.numBufos + 2);
+            return Math.max(3, gameState.settings.numImpostors + gameState.settings.numBufos + 1);
         }
 
         function updateMinPlayersRequirement() {
@@ -568,27 +528,80 @@
             updateCurrentPlayerCount();
         }
 
+        // --- LÒGICA D'ALEATORIETAT I MEMÒRIA ---
+
+        /** Algoritme Fisher-Yates per a una barreja perfecta */
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[array.length - 1 - i]] = [array[array.length - 1 - i], array[i]]; // Barreja extra
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
         function startGameLogic() {
             const inputs = document.querySelectorAll('.player-name-input');
-            const names = Array.from(inputs).map(i => i.value.trim() || i.placeholder);
+            const playerNames = Array.from(inputs).map(i => i.value.trim() || i.placeholder);
             const minReq = getMinPlayers();
 
-            if (names.length < minReq) return alert(`Necessites almenys ${minReq} jugadors.`);
+            if (playerNames.length < minReq) return alert(`Necessites almenys ${minReq} jugadors.`);
 
-            let roles = [];
-            for(let i=0; i<gameState.settings.numImpostors; i++) roles.push('IMPOSTOR');
-            for(let i=0; i<gameState.settings.numBufos; i++) roles.push('BUFO');
-            while(roles.length < names.length) roles.push('CIVILIAN');
-            roles.sort(() => Math.random() - 0.5);
+            // Recuperem l'últim impostor de localStorage
+            const lastImpostors = JSON.parse(localStorage.getItem('impostor_history') || '[]');
+            
+            // Creem l'estructura d'objectes de jugadors
+            let playersData = playerNames.map(name => ({ name: name, role: 'CIVILIAN' }));
 
-            const catWords = CATEGORIES[document.getElementById('category-select').value];
-            gameState.secretWord = catWords[Math.floor(Math.random() * catWords.length)];
+            // 1. Decidir quins índexs poden ser impostors (evitant els últims si és possible)
+            let possibleImpostorIndices = [];
+            playersData.forEach((p, index) => {
+                if (!lastImpostors.includes(p.name)) {
+                    possibleImpostorIndices.push(index);
+                }
+            });
 
-            gameState.players = names.map((name, i) => ({
-                name, role: roles[i], word: roles[i] === 'IMPOSTOR' ? null : gameState.secretWord
-            }));
+            // Si tothom va ser impostor o el grup és petit, permetem repetir
+            if (possibleImpostorIndices.length < gameState.settings.numImpostors) {
+                possibleImpostorIndices = playersData.map((_, i) => i);
+            }
 
+            // Barrejar els candidats a impostor
+            shuffle(possibleImpostorIndices);
+            
+            // 2. Assignar Impostors
+            let chosenImpostorNames = [];
+            for (let i = 0; i < gameState.settings.numImpostors; i++) {
+                const idx = possibleImpostorIndices.pop();
+                playersData[idx].role = 'IMPOSTOR';
+                chosenImpostorNames.push(playersData[idx].name);
+            }
+
+            // 3. Assignar Bufons entre els que queden
+            let remainingIndices = playersData
+                .map((p, i) => p.role === 'CIVILIAN' ? i : -1)
+                .filter(i => i !== -1);
+            
+            shuffle(remainingIndices);
+            for (let i = 0; i < gameState.settings.numBufos; i++) {
+                if (remainingIndices.length > 0) {
+                    const idx = remainingIndices.pop();
+                    playersData[idx].role = 'BUFO';
+                }
+            }
+
+            // 4. Desar els nous impostors al localStorage per a la propera partida
+            localStorage.setItem('impostor_history', JSON.stringify(chosenImpostorNames));
+
+            // Escollir paraula secreta
+            const currentCat = document.getElementById('category-select').value;
+            const words = CATEGORIES[currentCat];
+            gameState.secretWord = words[Math.floor(Math.random() * words.length)];
+
+            // Finalitzar estat
+            gameState.players = playersData;
             gameState.currentPlayerIndex = 0;
+            
             updatePassScreen();
             showScreen('pass');
         }
@@ -608,15 +621,18 @@
             bufoMsg.classList.add('hidden');
 
             if (p.role === 'IMPOSTOR') {
-                card.classList.add('role-impostor'); title.innerText = "IMPOSTOR";
-                content.innerHTML = '<p>No saps la paraula. Intenta deduir-la o enganya tothom.</p>';
+                card.classList.add('role-impostor'); 
+                title.innerText = "IMPOSTOR";
+                content.innerHTML = '<p style="font-size:1.1rem">No saps la paraula secreta.<br><br>Escolta els altres i intenta passar desapercebut o endevinar de què parlen.</p>';
             } else if (p.role === 'BUFO') {
-                card.classList.add('role-bufo'); title.innerText = "BUFÓ";
-                content.innerHTML = `<p class="subtitle">PARAULA:</p><p class="word-display">${p.word}</p>`;
+                card.classList.add('role-bufo'); 
+                title.innerText = "BUFÓ";
+                content.innerHTML = `<p class="subtitle">LA PARAULA ÉS:</p><p class="word-display">${gameState.secretWord}</p>`;
                 bufoMsg.classList.remove('hidden');
             } else {
-                card.classList.add('role-civilian'); title.innerText = "CIUTADÀ";
-                content.innerHTML = `<p class="subtitle">PARAULA:</p><p class="word-display">${p.word}</p>`;
+                card.classList.add('role-civilian'); 
+                title.innerText = "CIUTADÀ";
+                content.innerHTML = `<p class="subtitle">LA PARAULA ÉS:</p><p class="word-display">${gameState.secretWord}</p>`;
             }
             showScreen('reveal');
         }
@@ -637,7 +653,10 @@
             const container = document.getElementById('game-players-list');
             container.innerHTML = '';
             gameState.players.forEach(p => {
-                const tag = document.createElement('span'); tag.className = 'tag'; tag.innerText = p.name; container.appendChild(tag);
+                const tag = document.createElement('span'); 
+                tag.className = 'tag'; 
+                tag.innerText = p.name; 
+                container.appendChild(tag);
             });
             showScreen('game');
             startTimer();
@@ -651,13 +670,18 @@
             gameState.timerInterval = setInterval(() => {
                 gameState.timeLeft--;
                 updateTimerDisplay();
-                if (gameState.timeLeft <= 0) { clearInterval(gameState.timerInterval); alert("FI DEL TEMPS! Voteu."); }
+                if (gameState.timeLeft <= 0) { 
+                    clearInterval(gameState.timerInterval); 
+                    document.querySelector('.timer-circle').classList.remove('timer-running');
+                    alert("S'ha acabat el temps! Moment de votar l'impostor."); 
+                }
             }, 1000);
         }
 
         function toggleTimer() {
             if (!gameState.isPaused) {
-                clearInterval(gameState.timerInterval); gameState.isPaused = true;
+                clearInterval(gameState.timerInterval); 
+                gameState.isPaused = true;
                 document.getElementById('btn-toggle-timer').innerText = "CONTINUAR";
                 document.querySelector('.timer-circle').classList.remove('timer-running');
             } else { startTimer(); }
@@ -668,7 +692,10 @@
             document.getElementById('game-timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
         }
 
-        function resetGame() { clearInterval(gameState.timerInterval); showScreen('setup'); }
+        function resetGame() { 
+            clearInterval(gameState.timerInterval); 
+            showScreen('setup'); 
+        }
 
         init();
     </script>
